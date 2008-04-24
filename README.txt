@@ -1,0 +1,1 @@
+This is a plugin to facilitate GeoIP lookups using MaxMind's GeoIPCity database and Java APIs.
