@@ -102,6 +102,9 @@
 	    	<fileset 
 	    		dir="${distrib}" 
 	    		includes="**/*.*"/>
+	    	<fileset
+	    		dir="${libext}"
+	    		includes="**/*.*"/>
 	  	    </copy>
 	  </target>
 
