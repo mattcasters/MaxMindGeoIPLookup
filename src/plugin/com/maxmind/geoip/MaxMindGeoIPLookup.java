@@ -93,7 +93,7 @@ public class MaxMindGeoIPLookup extends BaseStep implements StepInterface
         }
 		putRow(data.outputRowMeta, outputRow);     // copy row to possible alternate rowset(s).
 
-		if (checkFeedback(linesRead)) logBasic("Linenr "+linesRead);  // Some basic logging every 5000 rows.
+		if (checkFeedback(getLinesRead())) logBasic("Linenr "+getLinesRead());  // Some basic logging every 5000 rows.
 			
 		return true;
 	}
@@ -148,7 +148,7 @@ public class MaxMindGeoIPLookup extends BaseStep implements StepInterface
 		finally
 		{
 		    dispose(meta, data);
-			logBasic("Finished, processing "+linesRead+" rows");
+			logBasic("Finished, processing "+getLinesRead()+" rows");
 			markStop();
 		}
 	}
