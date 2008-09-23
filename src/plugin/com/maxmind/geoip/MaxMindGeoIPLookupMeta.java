@@ -135,11 +135,11 @@ public class MaxMindGeoIPLookupMeta extends BaseStepMeta implements StepMetaInte
 		v.setOrigin(origin);
 		r.addValueMeta(v);
 		
-		v = new ValueMeta("latitude", ValueMeta.TYPE_NUMBER, 0, 4);
+		v = new ValueMeta("latitude", ValueMeta.TYPE_NUMBER, 10, 4);
 		v.setOrigin(origin);
 		r.addValueMeta(v);
 		
-		v = new ValueMeta("longitude", ValueMeta.TYPE_NUMBER, 0, 4);
+		v = new ValueMeta("longitude", ValueMeta.TYPE_NUMBER, 10, 4);
 		v.setOrigin(origin);
 		r.addValueMeta(v);
 		
