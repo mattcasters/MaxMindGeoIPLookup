@@ -3,7 +3,6 @@ package plugin.com.maxmind.geoip;
 
 import java.io.IOException;
 
-import org.pentaho.di.core.Const;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.exception.KettleValueException;
 import org.pentaho.di.core.row.RowDataUtil;
@@ -133,23 +132,6 @@ public class MaxMindGeoIPLookup extends BaseStep implements StepInterface
 	// Run is were the action happens!
 	public void run()
 	{
-		logBasic("Starting to run...");
-		try
-		{
-			while (processRow(meta, data) && !isStopped());
-		}
-		catch(Exception e)
-		{
-			logError("Unexpected error : "+e.toString());
-            logError(Const.getStackTracker(e));
-			setErrors(1);
-			stopAll();
-		}
-		finally
-		{
-		    dispose(meta, data);
-			logBasic("Finished, processing "+getLinesRead()+" rows");
-			markStop();
-		}
+	    BaseStep.runStepThread(this, meta, data);
 	}
 }
