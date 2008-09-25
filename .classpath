@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Kettle trunk"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="libext/maxmindgeoip.jar"/>
+	<classpathentry exported="true" kind="lib" path="libext/maxmindgeoip.jar" sourcepath="libext-src/GeoIPJava-1.2.2.zip"/>
 	<classpathentry kind="lib" path="/Kettle trunk/libswt/win32/swt.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
