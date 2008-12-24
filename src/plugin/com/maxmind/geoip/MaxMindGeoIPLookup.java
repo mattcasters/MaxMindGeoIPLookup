@@ -34,7 +34,6 @@ public class MaxMindGeoIPLookup extends BaseStep implements StepInterface
 	public MaxMindGeoIPLookup(StepMeta s, StepDataInterface stepDataInterface, int c, TransMeta t, Trans dis)
 	{
 		super(s,stepDataInterface,c,t,dis);
-		initializeIpTokens();
 	}
 	
 	public boolean processRow(StepMetaInterface smi, StepDataInterface sdi) throws KettleException
@@ -97,24 +96,6 @@ public class MaxMindGeoIPLookup extends BaseStep implements StepInterface
 		return true;
 	}
 
-    private static short[][][] ipTokens = new short[10][10][10];
-
-    private static void initializeIpTokens() {
-        for (short s = 0; s < 256; s++) {
-            String ss = String.valueOf(s);
-            switch (ss.length()) {
-                case 1:
-                    ipTokens[0][0][ss.charAt(0)-48] = s;
-                    break;
-                case 2:
-                    ipTokens[0][ss.charAt(0)-48][ss.charAt(1)-48] = s;
-                    break;
-                case 3:
-                    ipTokens[ss.charAt(0)-48][ss.charAt(1)-48][ss.charAt(2)-48] = s;
-            }
-        }
-    }
-
 	/**
 	 * This is a heavily optimized method for extracting the long representation of the IP
 	 * address without creating several Regex or String objects for each call.
@@ -123,40 +104,23 @@ public class MaxMindGeoIPLookup extends BaseStep implements StepInterface
 	 */
 	private long getAddressFromIpV4(String ip)
     {
-        long retval = 0;
 	    if (ip == null) return 0;
-	    
-        short parsedToken;
-        int start = 0;
-        int next = 0;
-
-        for (int i = 0; i < 4; i++) {
-            next = ip.indexOf('.', start);
-            if (next == -1) {
-                next = ip.length() - start;
+        int length = ip.length();
+        long result = 0;
+        short blockNumber = 0;
+        long block = 0;
+        for (int i = 0; i < length; i++) {
+            char c = ip.charAt(i);
+            if (c == '.') {
+                result += block << ((3 - blockNumber) * 8);
+                blockNumber++;
+                block = 0;
+            } else {
+                block = block * 10 + c - '0';
             }
-            try {
-                switch (next - start) {
-                    case 1:
-                        parsedToken = ipTokens[0][0][ip.charAt(start)-48];
-                        break;
-                    case 2:
-                        parsedToken = ipTokens[0][ip.charAt(start)-48][ip.charAt(start + 1)-48];
-                        break;
-                    case 3:
-                        parsedToken = ipTokens[ip.charAt(start)-48][ip.charAt(start + 1)-48][ip.charAt(start + 2)-48];
-                        break;
-                    default:
-                        return 0;
-                }
-            } catch (IndexOutOfBoundsException e) {
-                return 0;
-            }
-
-	        retval += parsedToken << ((3-i)*8);
-	    }
-	    
-	    return retval;
+        }
+        result += block << ((3 - blockNumber) * 8);
+        return result;
     }
 
     public boolean init(StepMetaInterface smi, StepDataInterface sdi)
