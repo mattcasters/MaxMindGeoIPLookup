@@ -17,7 +17,8 @@
 	  <property name="distrib"        		location="distrib"/>
 	  <property name="libext"     			location="libext"/>
       <property name="libswt"     			location="../../trunk/libswt"/>
-      <property name="deploydir"     		location="../../trunk/libext"/>
+      <property name="kettlelib"	     	location="../../trunk/distrib/lib"/>
+      <property name="deploydir"     		location="../../trunk/distrib/libext"/>
 	
 	  <target name="init" description="create timestamp and directories">
     	<echo>Init...</echo>
@@ -40,6 +41,7 @@
 	    	   destdir="${classes}">
 
 	    	<classpath id="cpath">
+				<fileset dir="${kettlelib}"		includes="*.jar"/>
 				<fileset dir="${libext}" 		includes="*.jar"/>
 				<fileset dir="${libswt}" 		includes="*.jar"/>
 				<fileset dir="${libswt}/win32/" includes="*.jar"/>
