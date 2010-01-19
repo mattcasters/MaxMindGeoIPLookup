@@ -16,7 +16,7 @@ import org.pentaho.di.core.row.ValueMeta;
 import org.pentaho.di.core.row.ValueMetaInterface;
 import org.pentaho.di.core.variables.VariableSpace;
 import org.pentaho.di.core.xml.XMLHandler;
-import org.pentaho.di.repository.Repository;
+import org.pentaho.di.repository.*;
 import org.pentaho.di.trans.Trans;
 import org.pentaho.di.trans.TransMeta;
 import org.pentaho.di.trans.step.BaseStepMeta;
@@ -26,7 +26,6 @@ import org.pentaho.di.trans.step.StepInterface;
 import org.pentaho.di.trans.step.StepMeta;
 import org.pentaho.di.trans.step.StepMetaInterface;
 import org.pentaho.di.core.annotations.Step;
-import org.pentaho.di.trans.step.StepCategory;
 import org.w3c.dom.Node;
 
 /*
@@ -37,7 +36,8 @@ import org.w3c.dom.Node;
 @Step(name = "MaxMindGeoIPLookup", image = "plugin/com/maxmind/geoip/MGL.png",
 		tooltip = "MaxMindGeoIPLookupMeta.TypeTooltipDesc.MaxMindGeoIPLookup", 
 		description = "MaxMindGeoIPLookupMeta.TypeLongDesc.MaxMindGeoIPLookup", 
-		category = StepCategory.CATEGORY_LOOKUP)
+		categoryDescription = "BaseStep.Category.Experimental",
+		i18nPackageName = "org.pentaho.di.trans.step")
 public class MaxMindGeoIPLookupMeta extends BaseStepMeta implements StepMetaInterface
 {
 	private String ipAddressFieldName;	
@@ -207,7 +207,7 @@ public class MaxMindGeoIPLookupMeta extends BaseStepMeta implements StepMetaInte
 		allocate(0);
 	}
 
-	public void readRep(Repository rep, long id_step, List<DatabaseMeta> databases, Map<String,Counter> counters) throws KettleException
+	public void readRep(Repository rep, ObjectId id_step, List<DatabaseMeta> databases, Map<String,Counter> counters) throws KettleException
 	{
 		try
 		{
@@ -235,7 +235,7 @@ public class MaxMindGeoIPLookupMeta extends BaseStepMeta implements StepMetaInte
 		}
 	}
 	
-	public void saveRep(Repository rep, long id_transformation, long id_step) throws KettleException
+	public void saveRep(Repository rep, ObjectId id_transformation, ObjectId id_step) throws KettleException
 	{
 		try
 		{
