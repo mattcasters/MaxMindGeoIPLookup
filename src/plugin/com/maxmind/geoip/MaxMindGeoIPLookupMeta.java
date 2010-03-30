@@ -33,8 +33,7 @@ import org.w3c.dom.Node;
  * @since  April-16-2008
  */
 
-@Step(name = "MaxMindGeoIPLookup", image = "plugin/com/maxmind/geoip/MGL.png",
-		tooltip = "MaxMindGeoIPLookupMeta.TypeTooltipDesc.MaxMindGeoIPLookup", 
+@Step(id = "MaxMindGeoIPLookup", name = "MaxMindGeoIPLookup", image = "plugin/com/maxmind/geoip/MGL.png",
 		description = "MaxMindGeoIPLookupMeta.TypeLongDesc.MaxMindGeoIPLookup", 
 		categoryDescription = "BaseStep.Category.Experimental",
 		i18nPackageName = "org.pentaho.di.trans.step")
