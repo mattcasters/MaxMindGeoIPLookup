@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+   id="MaxMindGeoIPLookup"
+   iconfile="MGL.png"
+   description="MaxMind GeoIP Lookup"
+   tooltip="Lookup an IPv4 address in a MaxMind database and add fields such as geography, ISP, or organization."
+   category="Lookup"
+   classname="plugin.com.maxmind.geoip.MaxMindGeoIPLookupMeta">
+   <libraries>
+    <library name="maxmindgeoip.jar"/>
+    <library name="maxmindgeoiplookup.jar"/>
+    </libraries>
+    
+   <localized_category>
+     <category locale="en_US">Lookup</category>
+   </localized_category>
+   <localized_description>
+     <description locale="en_US">MaxMind GeoIP Lookup</description>
+   </localized_description>
+   <localized_tooltip>
+     <tooltip locale="en_US">Lookup an IPv4 address in a MaxMind database and add fields such as geography, ISP, or organization.</tooltip>
+   </localized_tooltip>
+   
+</plugin>

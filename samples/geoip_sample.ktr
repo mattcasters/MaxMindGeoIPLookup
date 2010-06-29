@@ -5,7 +5,15 @@
     <description/>
     <extended_description/>
     <trans_version/>
+    <trans_status>0</trans_status>
     <directory>&#47;</directory>
+    <parameters>
+        <parameter>
+            <name>geoip_db_location</name>
+            <default_value>&#47;usr&#47;local&#47;share&#47;GeoIP&#47;GeoIPCity.dat</default_value>
+            <description>Path to a GeoIP.dat file</description>
+        </parameter>
+    </parameters>
     <log>
       <read/>
       <write/>
@@ -18,6 +26,7 @@
       <step_performance_table/>
       <use_batchid>Y</use_batchid>
       <use_logfield>N</use_logfield>
+      <size_limit_lines/>
     </log>
     <maxdate>
       <connection/>
@@ -48,48 +57,7 @@
   <notepads>
   </notepads>
   <order>
-  <hop> <from>Generate Rows</from><to>Add sequence 2</to><enabled>Y</enabled> </hop>  <hop> <from>Generate Rows</from><to>Add sequence 3</to><enabled>Y</enabled> </hop>  <hop> <from>Generate Rows</from><to>Add sequence 4</to><enabled>Y</enabled> </hop>  <hop> <from>Add sequence</from><to>Join Rows (cartesian product)</to><enabled>Y</enabled> </hop>  <hop> <from>Add sequence 2</from><to>Join Rows (cartesian product)</to><enabled>Y</enabled> </hop>  <hop> <from>Add sequence 3</from><to>Join Rows (cartesian product)</to><enabled>Y</enabled> </hop>  <hop> <from>Add sequence 4</from><to>Join Rows (cartesian product)</to><enabled>Y</enabled> </hop>  <hop> <from>Calculator</from><to>GeoIP lookup</to><enabled>Y</enabled> </hop>  <hop> <from>Join Rows (cartesian product)</from><to>Select values</to><enabled>Y</enabled> </hop>  <hop> <from>Select values</from><to>Calculator</to><enabled>Y</enabled> </hop>  <hop> <from>Generate Rows 2</from><to>Add sequence</to><enabled>Y</enabled> </hop>  <hop> <from>GeoIP lookup</from><to>Group by</to><enabled>Y</enabled> </hop>  </order>
-  <step>
-    <name>GeoIP lookup</name>
-    <type>MaxMindGeoIPLookup</type>
-    <description/>
-    <distribute>Y</distribute>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-   <ip_address_field_name>ip</ip_address_field_name>
-   <db_location>&#47;usr&#47;local&#47;share&#47;GeoIP&#47;GeoIPCity.dat</db_location>
-    <fields>    </fields>     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>300</xloc>
-      <yloc>600</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Generate Rows</name>
-    <type>RowGenerator</type>
-    <description/>
-    <distribute>N</distribute>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <fields>
-    </fields>
-    <limit>255</limit>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>300</xloc>
-      <yloc>100</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
+  <hop> <from>Generate Rows</from><to>Add sequence 2</to><enabled>Y</enabled> </hop>  <hop> <from>Generate Rows</from><to>Add sequence 3</to><enabled>Y</enabled> </hop>  <hop> <from>Generate Rows</from><to>Add sequence 4</to><enabled>Y</enabled> </hop>  <hop> <from>Add sequence</from><to>Join Rows (cartesian product)</to><enabled>Y</enabled> </hop>  <hop> <from>Add sequence 2</from><to>Join Rows (cartesian product)</to><enabled>Y</enabled> </hop>  <hop> <from>Add sequence 3</from><to>Join Rows (cartesian product)</to><enabled>Y</enabled> </hop>  <hop> <from>Add sequence 4</from><to>Join Rows (cartesian product)</to><enabled>Y</enabled> </hop>  <hop> <from>Calculator</from><to>GeoIP lookup</to><enabled>Y</enabled> </hop>  <hop> <from>Join Rows (cartesian product)</from><to>Select values</to><enabled>Y</enabled> </hop>  <hop> <from>Select values</from><to>Calculator</to><enabled>Y</enabled> </hop>  <hop> <from>Generate Rows 2</from><to>Add sequence</to><enabled>Y</enabled> </hop>  </order>
   <step>
     <name>Add sequence</name>
     <type>Sequence</type>
@@ -203,36 +171,6 @@
     </step>
 
   <step>
-    <name>Join Rows (cartesian product)</name>
-    <type>JoinRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-      <directory>%%java.io.tmpdir%%</directory>
-      <prefix>out</prefix>
-      <cache_size>500</cache_size>
-      <main>Add sequence</main>
-    <compare>
-<condition>
- <negated>N</negated>
- <leftvalue/>
- <function>=</function>
- <rightvalue/>
- </condition>
-    </compare>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>300</xloc>
-      <yloc>300</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
     <name>Calculator</name>
     <type>Calculator</type>
     <description/>
@@ -307,6 +245,123 @@
     </step>
 
   <step>
+    <name>Generate Rows</name>
+    <type>RowGenerator</type>
+    <description/>
+    <distribute>N</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <fields>
+    </fields>
+    <limit>255</limit>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>300</xloc>
+      <yloc>100</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Generate Rows 2</name>
+    <type>RowGenerator</type>
+    <description/>
+    <distribute>N</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <fields>
+    </fields>
+    <limit>55</limit>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>150</xloc>
+      <yloc>100</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>GeoIP lookup</name>
+    <type>MaxMindGeoIPLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+   <ip_address_field_name>ip</ip_address_field_name>
+   <db_location>&#47;Users&#47;dre&#47;Downloads&#47;GeoLiteCity.dat</db_location>
+   <db_type>CITY</db_type>
+    <fields>      <field>        <name>country_code</name>
+        <lookup_type>country_code</lookup_type>
+        <ifnull>??</ifnull>
+      </field>      <field>        <name>country_name</name>
+        <lookup_type>country_name</lookup_type>
+        <ifnull>Unknown</ifnull>
+      </field>      <field>        <name>rc</name>
+        <lookup_type>region_code</lookup_type>
+        <ifnull/>
+      </field>      <field>        <name>rn</name>
+        <lookup_type>region_name</lookup_type>
+        <ifnull/>
+      </field>      <field>        <name>cn</name>
+        <lookup_type>city_name</lookup_type>
+        <ifnull/>
+      </field>      <field>        <name>la</name>
+        <lookup_type>latitude</lookup_type>
+        <ifnull/>
+      </field>      <field>        <name>lo</name>
+        <lookup_type>longitude</lookup_type>
+        <ifnull/>
+      </field>      <field>        <name>tz</name>
+        <lookup_type>timezone</lookup_type>
+        <ifnull/>
+      </field>    </fields>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>300</xloc>
+      <yloc>600</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Join Rows (cartesian product)</name>
+    <type>JoinRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+      <directory>%%java.io.tmpdir%%</directory>
+      <prefix>out</prefix>
+      <cache_size>500</cache_size>
+      <main>Add sequence</main>
+    <compare>
+<condition>
+ <negated>N</negated>
+ <leftvalue/>
+ <function>=</function>
+ <rightvalue/>
+ </condition>
+    </compare>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>300</xloc>
+      <yloc>300</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
     <name>Select values</name>
     <type>SelectValues</type>
     <description/>
@@ -361,78 +416,6 @@
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
       <xloc>300</xloc>
       <yloc>400</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Generate Rows 2</name>
-    <type>RowGenerator</type>
-    <description/>
-    <distribute>N</distribute>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <fields>
-    </fields>
-    <limit>55</limit>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>150</xloc>
-      <yloc>100</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Group by</name>
-    <type>GroupBy</type>
-    <description/>
-    <distribute>Y</distribute>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-      <all_rows>N</all_rows>
-      <ignore_aggregate>N</ignore_aggregate>
-      <field_ignore/>
-      <directory>%%java.io.tmpdir%%</directory>
-      <prefix>grp</prefix>
-      <add_linenr>N</add_linenr>
-      <linenr_fieldname/>
-      <give_back_row>N</give_back_row>
-      <group>
-        <field>
-          <name>country_code</name>
-        </field>
-        <field>
-          <name>country_name</name>
-        </field>
-        <field>
-          <name>region_code</name>
-        </field>
-        <field>
-          <name>region_name</name>
-        </field>
-        <field>
-          <name>city_name</name>
-        </field>
-      </group>
-      <fields>
-        <field>
-          <aggregate>count</aggregate>
-          <subject>city_name</subject>
-          <type>COUNT_ALL</type>
-          <valuefield/>
-        </field>
-      </fields>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>300</xloc>
-      <yloc>700</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
