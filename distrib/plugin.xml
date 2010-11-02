@@ -5,7 +5,7 @@
    description="MaxMind GeoIP Lookup"
    tooltip="Lookup an IPv4 address in a MaxMind database and add fields such as geography, ISP, or organization."
    category="Lookup"
-   classname="plugin.com.maxmind.geoip.MaxMindGeoIPLookupMeta">
+   classname="com.maxmind.geoip.MaxMindGeoIPLookupMeta">
    <libraries>
     <library name="maxmindgeoip.jar"/>
     <library name="maxmindgeoiplookup.jar"/>
