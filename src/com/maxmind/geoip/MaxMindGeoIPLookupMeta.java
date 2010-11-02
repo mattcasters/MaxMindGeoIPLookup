@@ -226,7 +226,7 @@ public boolean setupMaxMindDatabase() {
     maxMindDatabase = null;
     try
     {
-    	setIpAddressFieldName(rep.getStepAttributeString(idStep, 0, "ip_address_field_name")); //$NON-NLS-1$
+    	setIpAddressFieldName(rep.getStepAttributeString(idStep, "ip_address_field_name")); //$NON-NLS-1$
       setDbLocation(rep.getStepAttributeString(idStep, "db_location")); //$NON-NLS-1$
       setDbType(rep.getStepAttributeString(idStep, "db_type")); //$NON-NLS-1$
 
@@ -305,7 +305,7 @@ public boolean setupMaxMindDatabase() {
       remarks.add(cr);
     }
 
-    if (prev.indexOfValue(getIpAddressFieldName()) < 0)
+    if ( (prev == null) || (prev.indexOfValue(getIpAddressFieldName()) < 0) )
     {
       cr = new CheckResult(CheckResult.TYPE_RESULT_ERROR, "IP Address field not found.", stepMeta);
       remarks.add(cr);
@@ -322,8 +322,13 @@ public boolean setupMaxMindDatabase() {
       remarks.add(cr);
     }
     else
-    {
-      cr = new CheckResult(CheckResult.TYPE_RESULT_OK, "MaxMind GeoIP DB Location is specified.", stepMeta);
+    { 
+    	try {
+      	MaxMindGeoIP.initLookupService(getDbLocation());
+        cr = new CheckResult(CheckResult.TYPE_RESULT_OK, "MaxMind GeoIP DB Location is valid.", stepMeta);
+    	} catch (IOException e) { // Invalid Location
+        cr = new CheckResult(CheckResult.TYPE_RESULT_ERROR, "MaxMind DB file invalid: " + getDbLocation() + ".", stepMeta);
+      }
       remarks.add(cr);
     }
 

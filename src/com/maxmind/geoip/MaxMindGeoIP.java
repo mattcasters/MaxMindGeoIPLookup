@@ -55,7 +55,7 @@ public class MaxMindGeoIP {
   }
   
   /*
-   * Return the fields for the specific MaxMond databases 
+   * Return the fields for the specific MaxMind databases 
    */
   public static final String[] getDbFieldanmes(String dbType) {
     MaxMindDatabase mmDb = MaxMindGeoIP.getDatabase( dbType );
