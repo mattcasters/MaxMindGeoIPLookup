@@ -7,7 +7,7 @@
    category="Lookup"
    classname="com.maxmind.geoip.MaxMindGeoIPLookupMeta">
    <libraries>
-    <library name="maxmindgeoip.jar"/>
+    <library name="maxmindgeoip124.jar"/>
     <library name="maxmindgeoiplookup.jar"/>
     </libraries>
     
