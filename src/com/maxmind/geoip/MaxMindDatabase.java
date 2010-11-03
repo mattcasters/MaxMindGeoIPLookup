@@ -104,9 +104,7 @@ public abstract class MaxMindDatabase {
     IMaxmindMetaInterface[] selectedFelds = getSelectedFields();
     for ( int i = 0; i < selectedFelds.length; ++i ) {
       ValueMetaInterface v = selectedFelds[i].getValueMetadata();
-      if ( ! Const.isEmpty( overrideFieldNames[i] ) ) {
-        v.setName(overrideFieldNames[i]);
-      }
+      v.setName( Const.isEmpty( overrideFieldNames[i] ) ? selectedFelds[i].toString(): overrideFieldNames[i] );
       v.setOrigin(origin);
       r.addValueMeta(v);
     }

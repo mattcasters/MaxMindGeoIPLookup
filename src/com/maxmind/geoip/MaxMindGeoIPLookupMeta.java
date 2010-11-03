@@ -112,7 +112,7 @@ public boolean setupMaxMindDatabase() {
           maxMindDatabase.setDbLocation(dbLocation);
           maxMindDatabase.setSelectedFields(fieldLookupType );
           maxMindDatabase.setSelectedFields(fieldLookupType, fieldName, fieldIfNull );
-        } catch (IOException e) { // Invalid Location
+        } catch (Exception e) { // Invalid Location
           maxMindDatabase = null;
         }
       }

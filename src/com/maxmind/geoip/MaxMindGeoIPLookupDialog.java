@@ -205,7 +205,7 @@ public class MaxMindGeoIPLookupDialog extends BaseStepDialog implements StepDial
     fdlDbInfo.top  = new FormAttachment(lastControl, margin);
     wbDbInfo.setLayoutData(fdlDbInfo);
     wlDbInfo=new Label(shell, SWT.LEFT);
-    wlDbInfo.setText("Hi Dude"); //$NON-NLS-1$
+    wlDbInfo.setText("  "); //$NON-NLS-1$
     props.setLook(wlDbInfo);
     fdDbInfo=new FormData();
     fdDbInfo.left = new FormAttachment(middle, 0);
@@ -414,6 +414,7 @@ public class MaxMindGeoIPLookupDialog extends BaseStepDialog implements StepDial
 
     input.allocate(nrfields);
 
+  	wFields.nrNonEmpty();
     for (int i = 0; i < input.getFieldName().length; i++)
     {
       final TableItem ti = wFields.getNonEmpty(i);
