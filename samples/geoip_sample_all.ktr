@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>geoip_sample</name>
+    <name>geoip_sample_all</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -66,19 +66,15 @@
   </info>
   <notepads>
     <notepad>
-      <note>Before running this transform, you need to download the free GeoLite City binary data file from:
-http:&#47;&#47;www.maxmind.com&#47;app&#47;geolitecity
-file:
-http:&#47;&#47;geolite.maxmind.com&#47;download&#47;geoip&#47;database&#47;GeoLiteCity.dat.gz
+      <note>This sample transform uses the Maxmind free GeoLiteCity and CountryLite data files.  It also uses the
+for pay ISP, Organization and Domain data files.
 
-Save it anywhere on your system, unzip it, open the GeoLiteCity step and &quot;Browse&quot; for 
-the file you just unzipped.
-
-Preview the GeoLiteCity step to see the output.</note>
-      <xloc>16</xloc>
-      <yloc>80</yloc>
-      <width>475</width>
-      <heigth>127</heigth>
+Before running this transform, you need to download the data files from
+http:&#47;&#47;www.maxmind.com&#47;</note>
+      <xloc>21</xloc>
+      <yloc>87</yloc>
+      <width>502</width>
+      <heigth>75</heigth>
       <fontname>Ariel</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -96,52 +92,7 @@ Preview the GeoLiteCity step to see the output.</note>
     </notepad>
   </notepads>
   <order>
-  <hop> <from>Sample IP Addrs</from><to>GeoLiteCity</to><enabled>Y</enabled> </hop>  </order>
-  <step>
-    <name>GeoLiteCity</name>
-    <type>MaxMindGeoIPLookup</type>
-    <description/>
-    <distribute>Y</distribute>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-   <ip_address_field_name>ip</ip_address_field_name>
-   <db_location/>
-   <db_type>CITY</db_type>
-    <fields>      <field>        <name/>
-        <lookup_type>country_code</lookup_type>
-        <ifnull>??</ifnull>
-      </field>      <field>        <name/>
-        <lookup_type>country_name</lookup_type>
-        <ifnull>Unknown</ifnull>
-      </field>      <field>        <name/>
-        <lookup_type>region_code</lookup_type>
-        <ifnull/>
-      </field>      <field>        <name/>
-        <lookup_type>region_name</lookup_type>
-        <ifnull/>
-      </field>      <field>        <name>City</name>
-        <lookup_type>city_name</lookup_type>
-        <ifnull/>
-      </field>      <field>        <name>Lat</name>
-        <lookup_type>latitude</lookup_type>
-        <ifnull/>
-      </field>      <field>        <name>Lon</name>
-        <lookup_type>longitude</lookup_type>
-        <ifnull/>
-      </field>      <field>        <name>TZ</name>
-        <lookup_type>timezone</lookup_type>
-        <ifnull/>
-      </field>    </fields>     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>135</xloc>
-      <yloc>27</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
+  <hop> <from>Sample IP Addrs</from><to>GeoLiteCity</to><enabled>Y</enabled> </hop>  <hop> <from>GeoLiteCity</from><to>CountryLite</to><enabled>Y</enabled> </hop>  <hop> <from>CountryLite</from><to>GeoISP</to><enabled>Y</enabled> </hop>  <hop> <from>GeoISP</from><to>GeoIPOrg</to><enabled>Y</enabled> </hop>  <hop> <from>GeoIPOrg</from><to>GeoIPDomain - Hack</to><enabled>Y</enabled> </hop>  </order>
   <step>
     <name>Sample IP Addrs</name>
     <type>DataGrid</type>
@@ -188,8 +139,152 @@ Preview the GeoLiteCity step to see the output.</note>
     </data>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>36</xloc>
+      <xloc>35</xloc>
       <yloc>27</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>GeoLiteCity</name>
+    <type>MaxMindGeoIPLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+   <ip_address_field_name>ip</ip_address_field_name>
+   <db_location>&#47;Pentaho&#47;Dev&#47;GeoIP - April 2010&#47;GeoLiteCity.dat</db_location>
+   <db_type>CITY</db_type>
+    <fields>      <field>        <name/>
+        <lookup_type>country_code</lookup_type>
+        <ifnull>??</ifnull>
+      </field>      <field>        <name/>
+        <lookup_type>country_name</lookup_type>
+        <ifnull>Unknown</ifnull>
+      </field>      <field>        <name/>
+        <lookup_type>region_code</lookup_type>
+        <ifnull/>
+      </field>      <field>        <name/>
+        <lookup_type>region_name</lookup_type>
+        <ifnull/>
+      </field>      <field>        <name>City</name>
+        <lookup_type>city_name</lookup_type>
+        <ifnull/>
+      </field>      <field>        <name>Lat</name>
+        <lookup_type>latitude</lookup_type>
+        <ifnull/>
+      </field>      <field>        <name>Lon</name>
+        <lookup_type>longitude</lookup_type>
+        <ifnull/>
+      </field>      <field>        <name>TZ</name>
+        <lookup_type>timezone</lookup_type>
+        <ifnull/>
+      </field>    </fields>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>138</xloc>
+      <yloc>27</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>CountryLite</name>
+    <type>MaxMindGeoIPLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+   <ip_address_field_name>ip</ip_address_field_name>
+   <db_location>&#47;Pentaho&#47;Dev&#47;GeoIP - April 2010&#47;GeoIP_CountryLite.dat</db_location>
+   <db_type>COUNTRY</db_type>
+    <fields>      <field>        <name>CountryCode</name>
+        <lookup_type>country_code</lookup_type>
+        <ifnull/>
+      </field>      <field>        <name>CountryName</name>
+        <lookup_type>country_name</lookup_type>
+        <ifnull/>
+      </field>    </fields>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>231</xloc>
+      <yloc>27</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>GeoISP</name>
+    <type>MaxMindGeoIPLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+   <ip_address_field_name>ip</ip_address_field_name>
+   <db_location>&#47;Pentaho&#47;Dev&#47;GeoIP - April 2010&#47;GeoIPISP.dat</db_location>
+   <db_type>ISP</db_type>
+    <fields>      <field>        <name/>
+        <lookup_type>isp_name</lookup_type>
+        <ifnull/>
+      </field>    </fields>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>320</xloc>
+      <yloc>28</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>GeoIPOrg</name>
+    <type>MaxMindGeoIPLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+   <ip_address_field_name>ip</ip_address_field_name>
+   <db_location>&#47;Pentaho&#47;Dev&#47;GeoIP - April 2010&#47;GeoIPOrg.dat</db_location>
+   <db_type>ORG</db_type>
+    <fields>      <field>        <name/>
+        <lookup_type>organization_name</lookup_type>
+        <ifnull/>
+      </field>    </fields>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>407</xloc>
+      <yloc>29</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>GeoIPDomain - Hack</name>
+    <type>MaxMindGeoIPLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+   <ip_address_field_name>ip</ip_address_field_name>
+   <db_location>&#47;Pentaho&#47;Dev&#47;GeoIP - April 2010&#47;GeoIPDomain.dat</db_location>
+   <db_type>ORG</db_type>
+    <fields>      <field>        <name>Domain</name>
+        <lookup_type>organization_name</lookup_type>
+        <ifnull/>
+      </field>    </fields>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>505</xloc>
+      <yloc>30</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
