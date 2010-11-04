@@ -156,7 +156,7 @@ public class MaxMindGeoIPLookupDialog extends BaseStepDialog implements StepDial
 
     // The field itself...
     Label wlFilename = new Label(shell, SWT.RIGHT);
-    wlFilename.setText("Maxmind DB File");
+    wlFilename.setText("MaxMind DB File");
     props.setLook(wlFilename);
     FormData fdlFilename = new FormData();
     fdlFilename.top = new FormAttachment(lastControl, margin);
@@ -175,7 +175,7 @@ public class MaxMindGeoIPLookupDialog extends BaseStepDialog implements StepDial
 
     // DB Type
     wlDbType=new Label(shell, SWT.RIGHT);
-    wlDbType.setText("Maxmind Database Type"); //$NON-NLS-1$
+    wlDbType.setText("MaxMind Database Type"); //$NON-NLS-1$
     props.setLook(wlDbType);
     fdlDbType=new FormData();
     fdlDbType.left = new FormAttachment(0, 0);
@@ -290,7 +290,7 @@ public class MaxMindGeoIPLookupDialog extends BaseStepDialog implements StepDial
         public void widgetSelected(SelectionEvent e) {
           FileDialog dialog = new FileDialog(shell, SWT.OPEN);
           dialog.setFilterExtensions(new String[] { "*.dat", "*" });  //$NON-NLS-1$//$NON-NLS-2$
-          dialog.setFilterNames(new String[] { "Maxmind GeoIP data", Messages.getString("System.FileType.AllFiles") }); //$NON-NLS-2$
+          dialog.setFilterNames(new String[] { "MaxMind GeoIP data", Messages.getString("System.FileType.AllFiles") }); //$NON-NLS-2$
 
           if (wFilename.getText() != null) {
             String fname = transMeta.environmentSubstitute(wFilename.getText());
