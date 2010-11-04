@@ -8,6 +8,9 @@
 
 	  <property file="override.properties"/>
 
+	  <!-- Plugin Name -->
+	  <property name= "plugin-name" value="MaxMindGeoIPLookup"/> 
+
 	  <!-- system properties to use -->
 	  <property name= "cr" value="${line.separator}"/> 
 		
@@ -18,6 +21,7 @@
 	  <property name="lib"        			location="lib"/>
 	  <property name="distrib"        		location="distrib"/>
 	  <property name="libext"     			location="libext"/>
+	  <property name="deploydir"     		location="deploy/${plugin-name}"/>
 	
 	  <target name="init" description="create timestamp and directories">
     	<echo>Init...</echo>
@@ -26,6 +30,7 @@
 	    <mkdir dir="${classes}"/>
 	    <mkdir dir="${lib}"/>
 	    <mkdir dir="${distrib}"/>
+	    <mkdir dir="${deploydir}"/>
 	  </target>
 
 	  <!--
@@ -85,9 +90,8 @@
 	  <target name="distrib" depends="jar" description="Create the distribution package..." >
 	  	<echo>Copying libraries to distrib directory...</echo>
 	    <copy todir="${distrib}">
-	    	<fileset 
-	    		dir="${lib}" 
-	    		includes="**/*.jar"/>
+	    	<fileset dir="${lib}" includes="**/*.jar"/>
+	    	<fileset dir="${libext}" includes="**/*.jar"/>
 	  	    </copy>
 	  </target>
 
@@ -99,7 +103,8 @@
 
 	  <target name="deploy" depends="distrib" description="Deploy distribution..." >
 	  	<echo>deploying plugin...</echo>
-	    <copy todir="${deploydir1}">
+	  	<delete file="${deploydir}.zip"/>
+	    <copy todir="${deploydir}">
 	    	<fileset 
 	    		dir="${distrib}" 
 	    		includes="**/*.*"/>
@@ -107,7 +112,7 @@
 	    		dir="${libext}"
 	    		includes="**/*.*"/>
 	  	    </copy>
-	    <copy todir="${deploydir2}">
+	    <copy todir="${deploy-localinstance}">
 	    	<fileset 
 	    		dir="${distrib}" 
 	    		includes="**/*.*"/>
@@ -117,12 +122,26 @@
 	  	    </copy>
 	  </target>
 
+	  <!--
+	       ==========================
+	                Plugin ZIP
+	       ==========================
+	  -->
+		
+	  <target name="zip" depends="deploy" description="generate the MaxMind GeoIP Lookup plugin zip">
+	  	<echo>Generating the MaxMindGeoIPLookup plugin zip ...</echo>
+	  	<zip 
+	    	zipfile="${deploydir}.zip" 
+	    	basedir="${deploydir}/.." 
+	    	includes="**/*"/>	 
+	  </target>
+
 	<!--
 	       ==========================
 	          Default target: all
 	       ==========================
 	  -->
-	<target name="default" depends="deploy" description="default = build all"/>
+	<target name="default" depends="zip" description="default = build all"/>
 
 	<!--
 	       ==========================
