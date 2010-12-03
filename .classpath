@@ -4,6 +4,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Kettle trunk"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libext/maxmindgeoip124.jar"/>
-	<classpathentry kind="lib" path="/Pentaho/Dev/workspaceV35/Kettle trunk/libswt/osx64/swt.jar"/>
+	<classpathentry kind="var" path="PENTAHO_SWT_JAR"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
