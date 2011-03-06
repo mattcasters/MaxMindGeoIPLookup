@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.pentaho.di.core.CheckResult;
 import org.pentaho.di.core.CheckResultInterface;
 import org.pentaho.di.core.Counter;
+import org.pentaho.di.core.annotations.Step;
 import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.core.exception.KettleDatabaseException;
 import org.pentaho.di.core.exception.KettleException;
@@ -32,6 +33,8 @@ import org.w3c.dom.Node;
  * @author Daniel Einspanjer and Doug Moran
  * @since  April-16-2008
  */
+@Step(id = "MaxMindGeoIPLookup", name = "MaxMindGeoIPLookup",image = "plugin/com/maxmind/geoip/MGL.png",
+			       description = "MaxMindGeoIPLookupMeta.TypeLongDesc.MaxMindGeoIPLookup")
 public class MaxMindGeoIPLookupMeta extends BaseStepMeta implements StepMetaInterface
 {
   private String ipAddressFieldName;
