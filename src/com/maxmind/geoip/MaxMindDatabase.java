@@ -438,3 +438,58 @@ final class MaxMindOrgData extends MaxMindDatabase {
     }
   }
 }
+
+
+/***********************************************************************************************
+ * Maxmind Domain Database
+ */
+final class MaxMindDomainData extends MaxMindDatabase {
+  enum DomainFields implements IMaxmindMetaInterface {
+    domain_name(ValueMeta.TYPE_STRING, 255, 0) {
+      Object getVal(LookupService ls, long ipNum) {
+        return (ls.getOrg(ipNum));
+      }
+    };
+
+    ValueMetaInterface valueMeta;
+
+    private DomainFields(int type, int length, int precision) {
+      this.valueMeta = new ValueMeta(this.name(), type, length, precision);
+    }
+
+    public ValueMetaInterface getValueMetadata() {
+      return (valueMeta);
+    }
+
+    abstract Object getVal(LookupService ls, long ipNum);
+  }
+
+  DomainFields[] selectedFields = new DomainFields[0];
+
+  @Override
+  public void setSelectedFields(String[] fieldNames) {
+    selectedFields = (fieldNames == null) ? new DomainFields[0] : new DomainFields[fieldNames.length];
+    for (int i = 0; i < selectedFields.length; ++i) {
+      selectedFields[i] = DomainFields.valueOf(fieldNames[i]);
+    }
+  }
+
+  @Override
+  public IMaxmindMetaInterface[] getSelectedFields() {
+    return (selectedFields);
+  }
+
+  @Override
+  public IMaxmindMetaInterface[] getAllFields() {
+    return (DomainFields.values());
+  }
+
+  @Override
+  public void getRowData(Object[] outputRow, int firstNewFieldIndex, String ip) {
+    Object o;
+    for ( int i = 0; i < selectedFields.length; ++i) {
+      o = selectedFields[i].getVal(lookupService, getAddressFromIpV4(ip));
+      outputRow[firstNewFieldIndex++] = (o == null) ? defaultValues[i] : o;
+    }
+  }
+}

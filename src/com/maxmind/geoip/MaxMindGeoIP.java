@@ -22,11 +22,12 @@ public class MaxMindGeoIP {
   private static final String DB_COUNTRY = "COUNTRY"; //$NON-NLS-1$
   private static final String DB_ISP = "ISP"; //$NON-NLS-1$
   private static final String DB_ORG = "ORG"; //$NON-NLS-1$
+  private static final String DB_DOMAIN = "DOMAIN"; //$NON-NLS-1$
 
-  private static final String[] dbTypes = { DB_CITY, DB_COUNTRY, DB_ISP, DB_ORG };
+  private static final String[] dbTypes = { DB_CITY, DB_COUNTRY, DB_ISP, DB_ORG, DB_DOMAIN };
   
   //TODO: Use these friendly names for the selector in the dialog and make them I18n-able
-  private static final String[] dbNames = { "City", "Country", "Internet Service Provider", "Organization" };
+  private static final String[] dbNames = { "City", "Country", "Internet Service Provider", "Organization", "Domain" };
 
   public static final String[] getDatabaseTypes() {
     return (dbTypes);
@@ -49,6 +50,9 @@ public class MaxMindGeoIP {
     else if (DB_ISP.equals(dbType)) {
       return (new MaxMindIspData());
     } 
+    else if (DB_DOMAIN.equals(dbType)) {
+        return (new MaxMindDomainData());
+      } 
     else {
       return (null);
     }
