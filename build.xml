@@ -7,6 +7,9 @@
 	  <tstamp prefix="start"/>
 
 	  <property file="override.properties"/>
+	  <property name="libswt" value="../../../libswt"/>
+	  <property name="kettlelib" value="../../../lib"/>
+	  <property name="vfslib" value="../../../libext/pentaho"/>
 
 	  <!-- Plugin Name -->
 	  <property name= "plugin-name" value="MaxMindGeoIPLookup"/> 
@@ -21,7 +24,8 @@
 	  <property name="lib"        			location="lib"/>
 	  <property name="distrib"        		location="distrib"/>
 	  <property name="libext"     			location="libext"/>
-	  <property name="deploydir"     		location="deploy/${plugin-name}"/>
+	  <property name="resources"     		location="resources"/>
+	  <property name="deploydir"     		location="${distrib}/${plugin-name}"/>
 	
 	  <target name="init" description="create timestamp and directories">
     	<echo>Init...</echo>
@@ -29,8 +33,8 @@
 	    <tstamp/>
 	    <mkdir dir="${classes}"/>
 	    <mkdir dir="${lib}"/>
-	    <mkdir dir="${distrib}"/>
 	    <mkdir dir="${deploydir}"/>
+	    <mkdir dir="${distrib}"/>
 	  </target>
 
 	  <!--
@@ -41,7 +45,7 @@
 
 	  <target name="compile" depends="init" description="compile the source " >
 	  	<echo>Compiling MaxMind GeoIP Lookup...</echo>
-	    <javac srcdir="${src}" 
+	    <javac debug="true" srcdir="${src}" 
 	    	   destdir="${classes}">
 
 	    	<classpath id="cpath">
@@ -49,6 +53,7 @@
 				<fileset dir="${libext}" 		includes="*.jar"/>
 				<fileset dir="${libswt}" 		includes="*.jar"/>
 				<fileset dir="${libswt}/win32/" includes="*.jar"/>
+				<fileset dir="${vfslib}" 		includes="*.jar"/>
 		  		</classpath>
 	    </javac>
 	  </target>
@@ -87,12 +92,15 @@
 	       ==========================
 	  -->
 
-	  <target name="distrib" depends="jar" description="Create the distribution package..." >
-	  	<echo>Copying libraries to distrib directory...</echo>
-	    <copy todir="${distrib}">
-	    	<fileset dir="${lib}" includes="**/*.jar"/>
-	    	<fileset dir="${libext}" includes="**/*.jar"/>
-	  	    </copy>
+	  
+	  <target name="distrib" depends="jar" description="Generate distribution" >
+		  <echo>Generating distribution files...</echo>
+		  <delete file="${deploydir}.zip"/>
+		  <copy todir="${deploydir}">
+			  <fileset dir="${lib}" includes="**/*.jar"/>
+			  <fileset dir="${libext}" includes="**/*.jar"/>
+			  <fileset dir="${resources}"/>
+		  </copy>
 	  </target>
 
 	  <!--
@@ -101,25 +109,15 @@
 	       ==========================
 	  -->
 
-	  <target name="deploy" depends="distrib" description="Deploy distribution..." >
-	  	<echo>deploying plugin...</echo>
-	  	<delete file="${deploydir}.zip"/>
-	    <copy todir="${deploydir}">
-	    	<fileset 
-	    		dir="${distrib}" 
-	    		includes="**/*.*"/>
-	    	<fileset
-	    		dir="${libext}"
-	    		includes="**/*.*"/>
-	  	    </copy>
-	    <copy todir="${deploy-localinstance}">
-	    	<fileset 
-	    		dir="${distrib}" 
-	    		includes="**/*.*"/>
-	    	<fileset
-	    		dir="${libext}"
-	    		includes="**/*.*"/>
-	  	    </copy>
+
+	  <target name="deploy" depends="zip" if="deploy-localinstance" description="Deploy to local instance" >
+		  <echo>deploying plugin to ${deploy-localinstance}</echo>
+
+		  <copy todir="${deploy-localinstance}/${plugin-name}">
+			  <fileset 
+				  dir="${deploydir}" 
+				  includes="**/*.*"/>
+		  </copy>
 	  </target>
 
 	  <!--
@@ -128,7 +126,7 @@
 	       ==========================
 	  -->
 		
-	  <target name="zip" depends="deploy" description="generate the MaxMind GeoIP Lookup plugin zip">
+	  <target name="zip" depends="distrib" description="generate the MaxMind GeoIP Lookup plugin zip">
 	  	<echo>Generating the MaxMindGeoIPLookup plugin zip ...</echo>
 	  	<zip 
 	    	zipfile="${deploydir}.zip" 
@@ -152,6 +150,7 @@
 	  <target name="clean"  description="clean up generated files" >
 	    <delete dir="${classes}"/>
 	    <delete dir="${lib}"/>
+	    <delete dir="${distrib}"/>
 	  </target>
 	
 </project>
