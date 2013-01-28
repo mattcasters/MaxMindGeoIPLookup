@@ -3,7 +3,14 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Kettle trunk"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="libext/maxmindgeoip124.jar"/>
-	<classpathentry kind="var" path="PENTAHO_SWT_JAR"/>
+	<classpathentry kind="lib" path="libext/kettle-core.jar"/>
+	<classpathentry kind="lib" path="libext/kettle-db.jar"/>
+	<classpathentry kind="lib" path="libext/kettle-dbdialog.jar"/>
+	<classpathentry kind="lib" path="libext/kettle-engine.jar"/>
+	<classpathentry kind="lib" path="libext/kettle-test.jar"/>
+	<classpathentry kind="lib" path="libext/kettle-ui-swt.jar"/>
+	<classpathentry kind="lib" path="libext/kettle-vfs-20100924.jar"/>
+	<classpathentry kind="lib" path="libswt/swt.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/maxmindgeoip128b.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
