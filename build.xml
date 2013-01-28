@@ -7,9 +7,8 @@
 	  <tstamp prefix="start"/>
 
 	  <property file="override.properties"/>
-	  <property name="libswt" value="../../../libswt"/>
-	  <property name="kettlelib" value="../../../lib"/>
-	  <property name="vfslib" value="../../../libext/pentaho"/>
+	  <property name="libswt" value="libswt"/>
+	  <property name="libext" value="libext"/>
 
 	  <!-- Plugin Name -->
 	  <property name= "plugin-name" value="MaxMindGeoIPLookup"/> 
@@ -22,19 +21,16 @@
 	  <property name="src"        			location="src"/> 
 	  <property name="classes"        		location="classes"/> 
 	  <property name="lib"        			location="lib"/>
+	  <property name="samples"        		location="samples"/>
 	  <property name="distrib"        		location="distrib"/>
-	  <property name="libext"     			location="libext"/>
-	  <property name="resources"     		location="resources"/>
-	  <property name="deploydir"     		location="${distrib}/${plugin-name}"/>
 	
 	  <target name="init" description="create timestamp and directories">
     	<echo>Init...</echo>
 	  	
 	    <tstamp/>
 	    <mkdir dir="${classes}"/>
-	    <mkdir dir="${lib}"/>
-	    <mkdir dir="${deploydir}"/>
 	    <mkdir dir="${distrib}"/>
+	    <mkdir dir="${deploy}"/>
 	  </target>
 
 	  <!--
@@ -46,14 +42,14 @@
 	  <target name="compile" depends="init" description="compile the source " >
 	  	<echo>Compiling MaxMind GeoIP Lookup...</echo>
 	    <javac debug="true" srcdir="${src}" 
-	    	   destdir="${classes}">
+	    	   destdir="${classes}"
+                   includeantruntime="false"
+                   >
 
 	    	<classpath id="cpath">
-				<fileset dir="${kettlelib}"		includes="*.jar"/>
+				<fileset dir="${lib}" 		        includes="*.jar"/>
 				<fileset dir="${libext}" 		includes="*.jar"/>
 				<fileset dir="${libswt}" 		includes="*.jar"/>
-				<fileset dir="${libswt}/win32/" includes="*.jar"/>
-				<fileset dir="${vfslib}" 		includes="*.jar"/>
 		  		</classpath>
 	    </javac>
 	  </target>
@@ -63,13 +59,12 @@
 	       ==========================
 	  -->
 
-	  <target name="copy" depends="compile" description="copy images etc to classes directory" >
-	  	<echo>Copying images etc to classes directory...</echo>
-	    <copy todir="${classes}">
-	    	<fileset 
-	    		dir="${src}" 
-	    		includes="**/*.png,**/*.xml,**/*.properties"/>
-	  	    </copy>
+	  <target name="copy" depends="compile" description="copy dependend libraries" >
+	  	<echo>Copying required libraries...</echo>
+	    <copy todir="${distrib}/lib"> <fileset dir="${lib}/" includes="**/*"/> </copy>
+	    <copy todir="${distrib}/samples"> <fileset dir="${samples}/" includes="**/*"/> </copy>
+	    <copy todir="${distrib}/"> <fileset dir="." includes="README.txt"/> </copy>
+	    <copy todir="${classes}"> <fileset dir="${src}" includes="**/*.png **/*.xml **/*.xsl **/*properties"/> </copy>
 	  </target>
 			
 	  <!--
@@ -81,43 +76,9 @@
 	  <target name="jar" depends="compile, copy" description="generate the MaxMind GeoIP Lookup library jar">
 	  	<echo>Generating the MaxMindGeoIPLookup library jar ...</echo>
 	  	<jar 
-	    	jarfile="${lib}/maxmindgeoiplookup.jar" 
+	    	jarfile="${distrib}/maxmindgeoiplookup.jar" 
 	    	basedir="${classes}" 
 	    	includes="**/*"/>	 
-	  </target>
-
-	  <!--
-	       ==========================
-	           distrib for plugin
-	       ==========================
-	  -->
-
-	  
-	  <target name="distrib" depends="jar" description="Generate distribution" >
-		  <echo>Generating distribution files...</echo>
-		  <delete file="${deploydir}.zip"/>
-		  <copy todir="${deploydir}">
-			  <fileset dir="${lib}" includes="**/*.jar"/>
-			  <fileset dir="${libext}" includes="**/*.jar"/>
-			  <fileset dir="${resources}"/>
-		  </copy>
-	  </target>
-
-	  <!--
-	       ==========================
-	            deploy to Kettle
-	       ==========================
-	  -->
-
-
-	  <target name="deploy" depends="zip" if="deploy-localinstance" description="Deploy to local instance" >
-		  <echo>deploying plugin to ${deploy-localinstance}</echo>
-
-		  <copy todir="${deploy-localinstance}/${plugin-name}">
-			  <fileset 
-				  dir="${deploydir}" 
-				  includes="**/*.*"/>
-		  </copy>
 	  </target>
 
 	  <!--
@@ -126,20 +87,30 @@
 	       ==========================
 	  -->
 		
-	  <target name="zip" depends="distrib" description="generate the MaxMind GeoIP Lookup plugin zip">
+	  <target name="zip" depends="jar" description="generate the MaxMind GeoIP Lookup plugin zip">
 	  	<echo>Generating the MaxMindGeoIPLookup plugin zip ...</echo>
 	  	<zip 
-	    	zipfile="${deploydir}.zip" 
-	    	basedir="${deploydir}/.." 
-	    	includes="**/*"/>	 
+	    	zipfile="maxmindlookup.zip" 
+	    	basedir="${distrib}" 
+	    	includes="**/*"/>
 	  </target>
 
+	  <!-- ======================================
+	          Copy data to a deployment folder
+	       ======================================
+	  -->
+
+	  <target name="deploy" depends="zip" description="deploy as a Kettle plugin" >
+	  	<echo>Deploying as a Kettle plugin...</echo>
+	    <copy todir="${deploy}"> <fileset dir="${distrib}" includes="**/*"/> </copy>
+	  </target>
+			
 	<!--
 	       ==========================
 	          Default target: all
 	       ==========================
 	  -->
-	<target name="default" depends="zip" description="default = build all"/>
+	<target name="default" depends="deploy" description="default = build all"/>
 
 	<!--
 	       ==========================
@@ -149,8 +120,9 @@
 
 	  <target name="clean"  description="clean up generated files" >
 	    <delete dir="${classes}"/>
-	    <delete dir="${lib}"/>
 	    <delete dir="${distrib}"/>
+	    <delete file="maxmindlookup.zip"/>
+	    <delete dir="${deploy}"/>
 	  </target>
 	
 </project>
