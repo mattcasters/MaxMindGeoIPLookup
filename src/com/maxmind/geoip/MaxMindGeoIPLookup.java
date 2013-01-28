@@ -3,6 +3,7 @@ package com.maxmind.geoip;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.exception.KettleValueException;
 import org.pentaho.di.core.row.RowDataUtil;
+import org.pentaho.di.i18n.BaseMessages;
 import org.pentaho.di.trans.Trans;
 import org.pentaho.di.trans.TransMeta;
 import org.pentaho.di.trans.step.BaseStep;
@@ -19,6 +20,8 @@ import org.pentaho.di.trans.step.StepMetaInterface;
 
 public class MaxMindGeoIPLookup extends BaseStep implements StepInterface
 {
+  private static Class<?> PKG = MaxMindGeoIPLookup.class;
+  
   private MaxMindGeoIPLookupData data;
   private MaxMindGeoIPLookupMeta meta;
 	private MaxMindDatabase maxMindDatabase;
@@ -49,13 +52,12 @@ public class MaxMindGeoIPLookup extends BaseStep implements StepInterface
       
       data.ipAddressFieldIndex = data.outputRowMeta.indexOfValue(meta.getIpAddressFieldName());
 
-      maxMindDatabase = meta.getMaxMindDatabase();  // Just to be sure nothing changed
       meta.getFields(data.outputRowMeta, getStepname(), null, null, this);
 
       // only String type allowed
       if (!data.outputRowMeta.getValueMeta(data.ipAddressFieldIndex).isString())
       {
-        throw new KettleValueException((Messages.getString("MaxMindGeoIPLookup.Log.IpAddressFieldNotValid",meta.getIpAddressFieldName()))); //$NON-NLS-1$ 
+        throw new KettleValueException((BaseMessages.getString(PKG, "MaxMindGeoIPLookup.Log.IpAddressFieldNotValid",meta.getIpAddressFieldName()))); //$NON-NLS-1$ 
       }
     }
 
@@ -84,11 +86,14 @@ public class MaxMindGeoIPLookup extends BaseStep implements StepInterface
 
     if (super.init(smi, sdi))
     {
-        maxMindDatabase = meta.getMaxMindDatabase();
-        if ( maxMindDatabase == null )
-        {
-          return false;
-        }
+      MaxMindHelper helper = new MaxMindHelper(this, meta);
+      try {
+        helper.setupMaxMindDatabase();
+        maxMindDatabase = helper.getMaxMindDatabase();
+      } catch(Exception e) {
+        logError("Error initializing max mind database file location '"+helper.getFilenameLocation()+"'", e);
+        return false;
+      }
       return true;
     } 
     else 

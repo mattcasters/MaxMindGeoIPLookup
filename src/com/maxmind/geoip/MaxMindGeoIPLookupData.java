@@ -15,12 +15,13 @@ import org.pentaho.di.trans.step.StepDataInterface;
  */
 public class MaxMindGeoIPLookupData extends BaseStepData implements StepDataInterface
 {
-	protected int ipAddressFieldIndex;
-	protected RowMetaInterface outputRowMeta;
-	protected int firstNewFieldIndex;
+	public int ipAddressFieldIndex;
+	public RowMetaInterface outputRowMeta;
+	public int firstNewFieldIndex;
+	
 
 	protected MaxMindGeoIPLookupData()
 	{
 		super();
-	}
+	}	
 }

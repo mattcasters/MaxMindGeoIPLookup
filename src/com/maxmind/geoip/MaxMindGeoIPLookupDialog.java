@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Text;
 import org.pentaho.di.core.Const;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.row.RowMetaInterface;
+import org.pentaho.di.i18n.BaseMessages;
 import org.pentaho.di.trans.TransMeta;
 import org.pentaho.di.trans.step.BaseStepMeta;
 import org.pentaho.di.trans.step.StepDialogInterface;
@@ -45,6 +46,8 @@ import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
 public class MaxMindGeoIPLookupDialog extends BaseStepDialog implements StepDialogInterface
 {
+  private static Class<?> PKG = MaxMindGeoIPLookup.class;
+  
   private Label        wlFieldname;
   private CCombo       wFieldname;
   private FormData     fdlFieldname, fdFieldname;
@@ -97,14 +100,14 @@ public class MaxMindGeoIPLookupDialog extends BaseStepDialog implements StepDial
 		formLayout.marginHeight = Const.FORM_MARGIN;
 
 		shell.setLayout(formLayout);
-		shell.setText(Messages.getString("MaxMindGeoIPLookupDialog.Shell.Title")); //$NON-NLS-1$
+		shell.setText(BaseMessages.getString(PKG, "MaxMindGeoIPLookupDialog.Shell.Title")); //$NON-NLS-1$
 		
 		int middle = props.getMiddlePct();
 		int margin = Const.MARGIN;
 
 		// Stepname line
 		wlStepname=new Label(shell, SWT.RIGHT);
-		wlStepname.setText(Messages.getString("MaxMindGeoIPLookupDialog.StepName.Label")); //$NON-NLS-1$
+		wlStepname.setText(BaseMessages.getString(PKG, "MaxMindGeoIPLookupDialog.StepName.Label")); //$NON-NLS-1$
  		props.setLook(wlStepname);
 		fdlStepname=new FormData();
 		fdlStepname.left = new FormAttachment(0, 0);
@@ -147,8 +150,8 @@ public class MaxMindGeoIPLookupDialog extends BaseStepDialog implements StepDial
     // The filename browse button
     wbbFilename = new Button(shell, SWT.PUSH | SWT.CENTER);
     props.setLook(wbbFilename);
-    wbbFilename.setText(Messages.getString("System.Button.Browse")); //$NON-NLS-1$
-    wbbFilename.setToolTipText(Messages.getString("System.Tooltip.BrowseForFileOrDirAndAdd")); //$NON-NLS-1$
+    wbbFilename.setText(BaseMessages.getString(PKG, "System.Button.Browse")); //$NON-NLS-1$
+    wbbFilename.setToolTipText(BaseMessages.getString(PKG, "System.Tooltip.BrowseForFileOrDirAndAdd")); //$NON-NLS-1$
     FormData fdbFilename = new FormData();
     fdbFilename.top = new FormAttachment(lastControl, margin);
     fdbFilename.right = new FormAttachment(100, 0);
@@ -215,7 +218,7 @@ public class MaxMindGeoIPLookupDialog extends BaseStepDialog implements StepDial
     lastControl = wbDbInfo;
     
     wlFields=new Label(shell, SWT.RIGHT);
-		wlFields.setText(Messages.getString("MaxMindGeoIPLookupDialog.Fields.Label")); //$NON-NLS-1$
+		wlFields.setText(BaseMessages.getString(PKG, "MaxMindGeoIPLookupDialog.Fields.Label")); //$NON-NLS-1$
  		props.setLook(wlFields);
 		fdlFields=new FormData();
 		fdlFields.left = new FormAttachment(0, 0);
@@ -223,9 +226,9 @@ public class MaxMindGeoIPLookupDialog extends BaseStepDialog implements StepDial
 		wlFields.setLayoutData(fdlFields);
 
 		wOK=new Button(shell, SWT.PUSH);
-		wOK.setText(Messages.getString("System.Button.OK")); //$NON-NLS-1$
+		wOK.setText(BaseMessages.getString(PKG, "System.Button.OK")); //$NON-NLS-1$
 		wCancel=new Button(shell, SWT.PUSH);
-		wCancel.setText(Messages.getString("System.Button.Cancel")); //$NON-NLS-1$
+		wCancel.setText(BaseMessages.getString(PKG, "System.Button.Cancel")); //$NON-NLS-1$
 
 		setButtonPositions(new Button[] { wOK, wCancel }, margin, null);
 
@@ -235,11 +238,11 @@ public class MaxMindGeoIPLookupDialog extends BaseStepDialog implements StepDial
 
     colinf = new ColumnInfo[] {
         new ColumnInfo(
-            Messages.getString("MaxMindGeoIPLookupDialog.ColumnInfo.NewField"), ColumnInfo.COLUMN_TYPE_TEXT, false), //$NON-NLS-1$
+            BaseMessages.getString(PKG, "MaxMindGeoIPLookupDialog.ColumnInfo.NewField"), ColumnInfo.COLUMN_TYPE_TEXT, false), //$NON-NLS-1$
         new ColumnInfo(
-            Messages.getString("MaxMindGeoIPLookupDialog.ColumnInfo.LookupType"), ColumnInfo.COLUMN_TYPE_CCOMBO, new String[] { "" }), //$NON-NLS-1$ //$NON-NLS-2$
+            BaseMessages.getString(PKG, "MaxMindGeoIPLookupDialog.ColumnInfo.LookupType"), ColumnInfo.COLUMN_TYPE_CCOMBO, new String[] { "" }), //$NON-NLS-1$ //$NON-NLS-2$
         new ColumnInfo(
-            Messages.getString("MaxMindGeoIPLookupDialog.ColumnInfo.IfNull"), ColumnInfo.COLUMN_TYPE_TEXT, false) }; //$NON-NLS-1$
+            BaseMessages.getString(PKG, "MaxMindGeoIPLookupDialog.ColumnInfo.IfNull"), ColumnInfo.COLUMN_TYPE_TEXT, false) }; //$NON-NLS-1$
     wFields = new TableView(transMeta, shell, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI, colinf, fieldsRows, lsMod,
         props);
 
@@ -290,7 +293,7 @@ public class MaxMindGeoIPLookupDialog extends BaseStepDialog implements StepDial
         public void widgetSelected(SelectionEvent e) {
           FileDialog dialog = new FileDialog(shell, SWT.OPEN);
           dialog.setFilterExtensions(new String[] { "*.dat", "*" });  //$NON-NLS-1$//$NON-NLS-2$
-          dialog.setFilterNames(new String[] { "MaxMind GeoIP data", Messages.getString("System.FileType.AllFiles") }); //$NON-NLS-2$
+          dialog.setFilterNames(new String[] { "MaxMind GeoIP data", BaseMessages.getString(PKG, "System.FileType.AllFiles") }); //$NON-NLS-2$
 
           if (wFilename.getText() != null) {
             String fname = transMeta.environmentSubstitute(wFilename.getText());
@@ -386,7 +389,8 @@ public class MaxMindGeoIPLookupDialog extends BaseStepDialog implements StepDial
     }
     catch(KettleException ke)
     {
-      new ErrorDialog(shell, Messages.getString("ValueMapperDialog.FailedToGetFields.DialogTitle"), Messages.getString("ValueMapperDialog.FailedToGetFields.DialogMessage"), ke); //$NON-NLS-1$ //$NON-NLS-2$
+      new ErrorDialog(shell, BaseMessages.getString(PKG, "ValueMapperDialog.FailedToGetFields.DialogTitle"), 
+          BaseMessages.getString(PKG, "ValueMapperDialog.FailedToGetFields.DialogMessage"), ke); //$NON-NLS-1$ //$NON-NLS-2$
     }
    }
   }

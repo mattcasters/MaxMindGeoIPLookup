@@ -4,15 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+
 import org.apache.commons.vfs.FileName;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemManager;
 import org.apache.commons.vfs.FileType;
 import org.apache.commons.vfs.Selectors;
 import org.apache.commons.vfs.VFS;
-
 import org.pentaho.di.core.Const;
-import sun.java2d.pipe.SpanClipRenderer;
 
 /*
  * The Overall management class for all the MaxMind databases
@@ -30,7 +29,6 @@ public class MaxMindGeoIP {
   private static final String DB_ORG = "ORG"; //$NON-NLS-1$
   private static final String DB_DOMAIN = "DOMAIN"; //$NON-NLS-1$
   private static FileSystemManager fsManager = null;
-  private static boolean vfsEnabled = true;
 
   private static final String[] dbTypes = { DB_CITY, DB_COUNTRY, DB_ISP, DB_ORG, DB_DOMAIN };
   
@@ -85,9 +83,7 @@ public class MaxMindGeoIP {
    */
   public static final synchronized LookupService initLookupService(String dbLocation) throws IOException {
     
-      
-
-    if(fsManager == null){
+    if(fsManager == null) {
         fsManager = VFS.getManager();
     }
 
@@ -122,8 +118,6 @@ public class MaxMindGeoIP {
                     // this.log(Level.INFO, "Successfully copied file from " + dbLocation + " to " + localDbFile.getAbsolutePath());
                     localDbLocation = localDbFile.getAbsolutePath();
                 }
-
-
             }
         } catch (Exception e) {
             // ignore and keep going with local access
