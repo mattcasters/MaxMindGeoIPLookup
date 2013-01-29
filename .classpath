@@ -7,7 +7,6 @@
 	<classpathentry kind="lib" path="libext/kettle-db.jar"/>
 	<classpathentry kind="lib" path="libext/kettle-dbdialog.jar"/>
 	<classpathentry kind="lib" path="libext/kettle-engine.jar"/>
-	<classpathentry kind="lib" path="libext/kettle-test.jar"/>
 	<classpathentry kind="lib" path="libext/kettle-ui-swt.jar"/>
 	<classpathentry kind="lib" path="libext/kettle-vfs-20100924.jar"/>
 	<classpathentry kind="lib" path="libswt/swt.jar"/>

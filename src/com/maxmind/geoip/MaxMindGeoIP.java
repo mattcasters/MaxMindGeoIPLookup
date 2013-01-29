@@ -7,11 +7,13 @@ import java.util.HashMap;
 
 import org.apache.commons.vfs.FileName;
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemManager;
 import org.apache.commons.vfs.FileType;
 import org.apache.commons.vfs.Selectors;
-import org.apache.commons.vfs.VFS;
+import org.eclipse.swt.widgets.Display;
 import org.pentaho.di.core.Const;
+import org.pentaho.di.core.variables.VariableSpace;
+import org.pentaho.di.core.vfs.KettleVFS;
+import org.pentaho.di.ui.core.dialog.ErrorDialog;
 
 /*
  * The Overall management class for all the MaxMind databases
@@ -28,7 +30,7 @@ public class MaxMindGeoIP {
   private static final String DB_ISP = "ISP"; //$NON-NLS-1$
   private static final String DB_ORG = "ORG"; //$NON-NLS-1$
   private static final String DB_DOMAIN = "DOMAIN"; //$NON-NLS-1$
-  private static FileSystemManager fsManager = null;
+
 
   private static final String[] dbTypes = { DB_CITY, DB_COUNTRY, DB_ISP, DB_ORG, DB_DOMAIN };
   
@@ -83,10 +85,6 @@ public class MaxMindGeoIP {
    */
   public static final synchronized LookupService initLookupService(String dbLocation) throws IOException {
     
-    if(fsManager == null) {
-        fsManager = VFS.getManager();
-    }
-
     LookupService ls = null;
     WeakReference<LookupService> wrLs = globalLookupServices.get(dbLocation);
     if ((wrLs == null) || ((ls = wrLs.get()) == null)) {
@@ -94,33 +92,33 @@ public class MaxMindGeoIP {
         String localDbLocation = dbLocation;
 
         try {
-
-            FileName dbVfs = fsManager.resolveURI(dbLocation);
+            FileObject source = KettleVFS.getFileObject(dbLocation);
+            
+            FileName dbVfs = source.getName();
             if (dbVfs.getScheme().equals("file")) {
                 // Do nothing
             } else {
                 // It's remote - copy it locally
 
-                FileObject source = fsManager.resolveFile(dbLocation);
                 if (source.exists() && source.getType().equals(FileType.FILE) && source.isReadable()) {
 
                     // copy to a tmp file, that will be deleted in the end
+                    //
                     File localDbFile = File.createTempFile(dbVfs.getBaseName(), "." + dbVfs.getExtension());
                     localDbFile.deleteOnExit();
-                    FileObject localDbFileObject = fsManager.resolveFile(localDbFile.getAbsolutePath());
+                    FileObject localDbFileObject = KettleVFS.getFileObject(localDbFile.getAbsolutePath());
                     localDbFileObject.copyFrom(source, Selectors.SELECT_SELF);
-
+                    
                     // Closing references - we don't need them
                     source.close();
                     localDbFileObject.close();
-
                     
                     // this.log(Level.INFO, "Successfully copied file from " + dbLocation + " to " + localDbFile.getAbsolutePath());
                     localDbLocation = localDbFile.getAbsolutePath();
                 }
             }
         } catch (Exception e) {
-            // ignore and keep going with local access
+          throw new IOException("Unable to copy database file to local storage", e);
         }
 
       // Logger.getLogger(MaxMindGeoIP.class.getName()).log(Level.INFO, "GeoIP using database " + localDbLocation);
@@ -136,19 +134,25 @@ public class MaxMindGeoIP {
    * Country DB, can't tell if the file is not a real database file or not.  For now we will
    * just display the string and let the user figure out what is going on.
    */
-  public static String getDbInfo(String fileName) {
-    if (Const.isEmpty(fileName)) {
+  public static String getDbInfo(VariableSpace space, MaxMindGeoIPLookupMeta meta) {
+    if (Const.isEmpty(meta.getDbLocation())) {
       return (""); //$NON-NLS-1$
     }
 
     String dbInfoStr = null;
     try {
-      LookupService ls = new LookupService(fileName, LookupService.GEOIP_STANDARD);  // Don't cache here, it slows down design time
+      
+      MaxMindHelper helper = new MaxMindHelper(space, meta);
+      helper.setupMaxMindDatabase();
+      
+      LookupService ls = helper.getMaxMindDatabase().getLookupService();
+      
       DatabaseInfo dbInfo = ls.getDatabaseInfo();
       dbInfoStr = (dbInfo == null) ? null : dbInfo.toString();
       ls.close();
     } catch (Exception e) {
-      dbInfoStr = "Error opening DB file: '" + fileName + "'";
+      dbInfoStr = "Error opening DB file: '" + meta.getDbLocation() + "'";
+      new ErrorDialog(Display.getCurrent().getActiveShell(), "Error", dbInfoStr, e);
     }
     return (Const.isEmpty(dbInfoStr) ? "No DB info header, the file still may be valid." : dbInfoStr);
   }

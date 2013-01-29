@@ -339,12 +339,12 @@ public class MaxMindGeoIPLookupDialog extends BaseStepDialog implements StepDial
       wFieldname.setText(input.getIpAddressFieldName());
     if (input.getDbLocation() != null) {
       wFilename.setText(input.getDbLocation());
-      updateDbInfo();
     }
     if (input.getDbType() != null) {
       wDbType.setText(input.getDbType());
     }
     
+    updateDbInfo();
     
     Table table = wFields.table;
     if (input.getFieldName().length>0) table.removeAll();
@@ -363,7 +363,11 @@ public class MaxMindGeoIPLookupDialog extends BaseStepDialog implements StepDial
   }
 
 	private void updateDbInfo() {
-    wlDbInfo.setText( MaxMindGeoIP.getDbInfo( wFilename.getText() ) );
+	  
+	  MaxMindGeoIPLookupMeta meta = new MaxMindGeoIPLookupMeta();
+	  getInfo(meta);
+	  
+    wlDbInfo.setText( MaxMindGeoIP.getDbInfo(transMeta, meta ) );
 	}
 	
   private void getInputFields()
@@ -406,27 +410,28 @@ public class MaxMindGeoIPLookupDialog extends BaseStepDialog implements StepDial
   private void ok()
   {
   	if (Const.isEmpty(wStepname.getText())) return;
-
     stepname = wStepname.getText(); // return value
-
-    input.setIpAddressFieldName(wFieldname.getText());
-    input.setDbLocation(wFilename.getText());
-    input.setDbType(wDbType.getText());
+    getInfo(input);
+    dispose();
+  }
+  
+  public void getInfo(MaxMindGeoIPLookupMeta meta) {
+    meta.setIpAddressFieldName(wFieldname.getText());
+    meta.setDbLocation(wFilename.getText());
+    meta.setDbType(wDbType.getText());
 
     //Table table = wFields.table;
     int nrfields = wFields.nrNonEmpty();
 
-    input.allocate(nrfields);
+    meta.allocate(nrfields);
 
-  	wFields.nrNonEmpty();
-    for (int i = 0; i < input.getFieldName().length; i++)
+    wFields.nrNonEmpty();
+    for (int i = 0; i < meta.getFieldName().length; i++)
     {
       final TableItem ti = wFields.getNonEmpty(i);
-      input.getFieldName()[i] = ti.getText(1);
-      input.getFieldLookupType()[i] = ti.getText(2);
-      input.getFieldIfNull()[i] = ti.getText(3);
+      meta.getFieldName()[i] = ti.getText(1);
+      meta.getFieldLookupType()[i] = ti.getText(2);
+      meta.getFieldIfNull()[i] = ti.getText(3);
     }
-
-    dispose();
   }
 }

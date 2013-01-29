@@ -149,6 +149,10 @@ public abstract class MaxMindDatabase {
     result += block << ((3 - blockNumber) * 8);
     return result;
   }
+  
+  public LookupService getLookupService() {
+    return lookupService;
+  }
 }
 
 /*
@@ -157,6 +161,7 @@ public abstract class MaxMindDatabase {
 interface IMaxmindMetaInterface {
   public ValueMetaInterface getValueMetadata();
 }
+
 
 /**
  * 
@@ -492,4 +497,7 @@ final class MaxMindDomainData extends MaxMindDatabase {
       outputRow[firstNewFieldIndex++] = (o == null) ? defaultValues[i] : o;
     }
   }
+ 
+  
+  
 }
