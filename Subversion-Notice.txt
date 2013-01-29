@@ -1,0 +1,3 @@
+This project was copied from svn://source.pentaho.org/svnkettleroot/plugins/MaxMindGeoIPLookup/trunk
+
+Please note that the code in the above location is no longer being updated.
