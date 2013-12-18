@@ -68,9 +68,11 @@ public class MaxMindGeoIPLookup extends BaseStep implements StepInterface
     {
       outputRow[i] = r[i];
     }
-
-    maxMindDatabase.getRowData(outputRow, data.firstNewFieldIndex, data.outputRowMeta.getString(r, data.ipAddressFieldIndex) );
-    
+    	try{
+    		maxMindDatabase.getRowData(outputRow, data.firstNewFieldIndex, data.outputRowMeta.getString(r, data.ipAddressFieldIndex) );
+    	} catch (ArrayIndexOutOfBoundsException ex) {
+    		logError("Badness: "+data.outputRowMeta.getString(r, data.ipAddressFieldIndex));
+    	}
     putRow(data.outputRowMeta, outputRow); // copy row to possible alternate rowset(s).
 
     if (checkFeedback(getLinesRead())) logBasic("Linenr " + getLinesRead()); // Some basic logging every 5000 rows.
