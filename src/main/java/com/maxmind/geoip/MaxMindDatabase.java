@@ -7,10 +7,10 @@
 import java.io.IOException;
 
 import org.pentaho.di.core.Const;
+import org.pentaho.di.core.exception.KettlePluginException;
 import org.pentaho.di.core.row.RowMetaInterface;
-import org.pentaho.di.core.row.ValueMeta;
 import org.pentaho.di.core.row.ValueMetaInterface;
-
+import org.pentaho.di.core.row.value.ValueMetaFactory;
 
 import com.maxmind.geoip.Country;
 import com.maxmind.geoip.Location;
@@ -178,43 +178,43 @@ interface IMaxmindMetaInterface {
  */
 class MaxMindCityData extends MaxMindDatabase {
   enum CityFields implements IMaxmindMetaInterface {
-    country_code(ValueMeta.TYPE_STRING, 2, 0) {
+    country_code(ValueMetaInterface.TYPE_STRING, 2, 0) {
       Object getVal(Location l) {
         return (l.countryCode);
       }
     },
-    country_name(ValueMeta.TYPE_STRING, 50, 0) {
+    country_name(ValueMetaInterface.TYPE_STRING, 50, 0) {
       Object getVal(Location l) {
         return (l.countryName);
       }
     },
-    region_code(ValueMeta.TYPE_STRING, 2, 0) {
+    region_code(ValueMetaInterface.TYPE_STRING, 2, 0) {
       Object getVal(Location l) {
         return (l.region);
       }
     },
-    region_name(ValueMeta.TYPE_STRING, 50, 0) {
+    region_name(ValueMetaInterface.TYPE_STRING, 50, 0) {
       Object getVal(Location l) {
         return (regionName.regionNameByCode(l.countryCode, l.region));
       }
     },
-    city_name(ValueMeta.TYPE_STRING, 255, 0) {
+    city_name(ValueMetaInterface.TYPE_STRING, 255, 0) {
       Object getVal(Location l) {
         return (l.city);
       }
     },
-    latitude(ValueMeta.TYPE_NUMBER, 10, 4) {
+    latitude(ValueMetaInterface.TYPE_NUMBER, 10, 4) {
       Object getVal(Location l) {
         return ((double) l.latitude);
       }
     },
-    longitude(ValueMeta.TYPE_NUMBER, 10, 4) {
+    longitude(ValueMetaInterface.TYPE_NUMBER, 10, 4) {
       Object getVal(Location l) {
         return ((double) 
             l.longitude);
       }
     },
-    timezone(ValueMeta.TYPE_STRING, 255, 0) {
+    timezone(ValueMetaInterface.TYPE_STRING, 255, 0) {
       Object getVal(Location l) {
         return (timeZone.timeZoneByCountryAndRegion(l.countryCode, l.region));
       }
@@ -223,7 +223,11 @@ class MaxMindCityData extends MaxMindDatabase {
     ValueMetaInterface valueMeta;
 
     private CityFields(int type, int length, int precision) {
-      this.valueMeta = new ValueMeta(this.name(), type, length, precision);
+      try {
+        this.valueMeta = ValueMetaFactory.createValueMeta(this.name(), type, length, precision);
+      } catch (KettlePluginException e) {
+        this.valueMeta = null;
+      }
     }
 
     public ValueMetaInterface getValueMetadata() {
@@ -275,12 +279,12 @@ class MaxMindCityData extends MaxMindDatabase {
  */
 class MaxMindCountryData extends MaxMindDatabase {
   enum CountryFields implements IMaxmindMetaInterface {
-    country_code(ValueMeta.TYPE_STRING, 2, 0) {
+    country_code(ValueMetaInterface.TYPE_STRING, 2, 0) {
       Object getVal(Country co) {
         return (co.getCode());
       }
     },
-    country_name(ValueMeta.TYPE_STRING, 50, 0) {
+    country_name(ValueMetaInterface.TYPE_STRING, 50, 0) {
       Object getVal(Country co) {
         return (co.getName());
       }
@@ -289,7 +293,11 @@ class MaxMindCountryData extends MaxMindDatabase {
     ValueMetaInterface valueMeta;
 
     private CountryFields(int type, int length, int precision) {
-      this.valueMeta = new ValueMeta(this.name(), type, length, precision);
+      try {
+        this.valueMeta = ValueMetaFactory.createValueMeta(this.name(), type, length, precision);
+      } catch (KettlePluginException e) {
+        this.valueMeta = null;
+      }
     }
 
     public ValueMetaInterface getValueMetadata() {
@@ -341,7 +349,7 @@ class MaxMindCountryData extends MaxMindDatabase {
  */
 class MaxMindIspData extends MaxMindDatabase {
   enum IspFields implements IMaxmindMetaInterface {
-    isp_name(ValueMeta.TYPE_STRING, 255, 0) {
+    isp_name(ValueMetaInterface.TYPE_STRING, 255, 0) {
       Object getVal(LookupService ls, long ipNum) {
         return (ls.getOrg(ipNum));
       } // yes, this is correct, they use Org for both ISP and Org DB
@@ -350,7 +358,11 @@ class MaxMindIspData extends MaxMindDatabase {
     ValueMetaInterface valueMeta;
 
     private IspFields(int type, int length, int precision) {
-      this.valueMeta = new ValueMeta(this.name(), type, length, precision);
+      try {
+        this.valueMeta = ValueMetaFactory.createValueMeta(this.name(), type, length, precision);
+      } catch (KettlePluginException e) {
+        this.valueMeta = null;
+      }
     }
 
     public ValueMetaInterface getValueMetadata() {
@@ -395,7 +407,7 @@ class MaxMindIspData extends MaxMindDatabase {
  */
 class MaxMindOrgData extends MaxMindDatabase {
   enum OrgFields implements IMaxmindMetaInterface {
-    organization_name(ValueMeta.TYPE_STRING, 255, 0) {
+    organization_name(ValueMetaInterface.TYPE_STRING, 255, 0) {
       Object getVal(LookupService ls, long ipNum) {
         return (ls.getOrg(ipNum));
       }
@@ -404,7 +416,11 @@ class MaxMindOrgData extends MaxMindDatabase {
     ValueMetaInterface valueMeta;
 
     private OrgFields(int type, int length, int precision) {
-      this.valueMeta = new ValueMeta(this.name(), type, length, precision);
+      try {
+        this.valueMeta = ValueMetaFactory.createValueMeta(this.name(), type, length, precision);
+      } catch (KettlePluginException e) {
+        this.valueMeta = null;
+      }
     }
 
     public ValueMetaInterface getValueMetadata() {
@@ -450,7 +466,7 @@ class MaxMindOrgData extends MaxMindDatabase {
  */
 class MaxMindDomainData extends MaxMindDatabase {
   enum DomainFields implements IMaxmindMetaInterface {
-    domain_name(ValueMeta.TYPE_STRING, 255, 0) {
+    domain_name(ValueMetaInterface.TYPE_STRING, 255, 0) {
       Object getVal(LookupService ls, long ipNum) {
         return (ls.getOrg(ipNum));
       }
@@ -459,7 +475,11 @@ class MaxMindDomainData extends MaxMindDatabase {
     ValueMetaInterface valueMeta;
 
     private DomainFields(int type, int length, int precision) {
-      this.valueMeta = new ValueMeta(this.name(), type, length, precision);
+      try {
+        this.valueMeta = ValueMetaFactory.createValueMeta(this.name(), type, length, precision);
+      } catch (KettlePluginException e) {
+        this.valueMeta = null;
+	  }
     }
 
     public ValueMetaInterface getValueMetadata() {
