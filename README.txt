@@ -57,5 +57,3 @@ Add Support for DomainName Database - Hack works
 Add Support for Region Database
 Add Support for Metro Database
 Add Support for Accuracy Radius DB
-Make the file location work as a variable
-
